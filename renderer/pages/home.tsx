@@ -46,9 +46,7 @@ function Home() {
         <Sign handleSubmit={handleSubmit} signText="Sign In" />
         <Modal open={open} handleClose={handleClose} />
         <div style={{ marginTop: "10px" }}>
-          <Link href="/list">
-            <a>Go to the next page</a>
-          </Link>
+          <Link href="/list">Go to the next page</Link>
         </div>
       </div>
     </React.Fragment>
