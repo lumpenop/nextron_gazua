@@ -1,7 +1,11 @@
 import React from "react";
 import Head from "next/head";
 import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
-import { Paper, MenuList, MenuItem } from "@material-ui/core";
+import { Paper, MenuList, MenuItem, Box, Button } from "@material-ui/core";
+
+import store from "store";
+
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +18,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function List() {
   const classes = useStyles({});
+  const router = useRouter();
+  const userInfo = Object.keys(store.get("user"));
+
+  const logout = () => {
+    router.push("/home");
+  };
 
   return (
     <React.Fragment>
@@ -21,13 +31,22 @@ function List() {
         <title>Next - Nextron (with-typescript-material-ui)</title>
       </Head>
       <div className={classes.root}>
-        <Paper>
-          <MenuList>
-            <MenuItem>Profile</MenuItem>
-            <MenuItem>My account</MenuItem>
-            <MenuItem>Logout</MenuItem>
-          </MenuList>
-        </Paper>
+        <Box sx={{ height: "40px" }}>
+          <Box sx={{ position: "absolute", right: "5%" }}>
+            <Button variant="contained" color="secondary" onClick={logout}>
+              Logout
+            </Button>
+          </Box>
+        </Box>
+        <Box sx={{ width: "40%" }}>
+          <Paper>
+            <MenuList>
+              {userInfo.map((item, index) => {
+                return <MenuItem key={item + index}>{item}</MenuItem>;
+              })}
+            </MenuList>
+          </Paper>
+        </Box>
       </div>
     </React.Fragment>
   );
