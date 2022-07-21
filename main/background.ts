@@ -28,8 +28,12 @@ if (isProd) {
   }
 })();
 
-ipcMain.on("CHANNEL_NAME", (evt, payload) => {
-  console.log("hi");
+ipcMain.on("SIGN_IN", (evt, payload) => {
+  console.log(payload);
+});
+
+ipcMain.on("SIGN_UP", (evt, payload) => {
+  console.log(payload);
 });
 
 app.on("window-all-closed", () => {
