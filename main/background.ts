@@ -1,7 +1,8 @@
-import { app } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
-import { ipcMain } from "electron";
+import { ipcMain, app } from "electron";
+
+import { jwtToken } from "./jwt";
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
@@ -28,12 +29,24 @@ if (isProd) {
   }
 })();
 
-ipcMain.on("SIGN_IN", (evt, payload) => {
-  console.log(payload);
+ipcMain.on("SIGN_IN", (evt, payload: string) => {
+  const userId = payload;
+  if (userId) {
+    const accessToken = jwtToken.access(userId);
+    const refreshToken = jwtToken.refresh();
+
+    evt.reply("TOKEN", { accessToken, refreshToken });
+  }
 });
 
 ipcMain.on("SIGN_UP", (evt, payload) => {
   console.log(payload);
+});
+
+ipcMain.on("FIRST_CONNECTION", (evt, payload) => {
+  const isLogin = jwtToken.verify(payload.token.accessToken).ok;
+
+  evt.reply("FIRST_CONNECTION", { isLogin });
 });
 
 app.on("window-all-closed", () => {

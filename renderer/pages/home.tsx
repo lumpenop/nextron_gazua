@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
@@ -27,6 +27,17 @@ function Home() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+
+  useEffect(() => {
+    const token = store.get("authorization");
+    if (token) {
+      ipcRenderer.send("FIRST_CONNECTION", { token });
+      ipcRenderer.on("FIRST_CONNECTION", (evt, payload) => {
+        if (payload) router.push("/list");
+      });
+    }
+  }, []);
+
   const handleModalClose = () => setIsModalOpen(false);
   const handleModalClick = () => {
     setIsModalOpen(true);
@@ -37,9 +48,15 @@ function Home() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const userInfo = store.get("user");
+    if (userInfo) {
+      const userId = String(data.get("userId"));
 
-    if (userInfo[String(data.get("userId"))]) {
-      ipcRenderer.send("SIGN_IN", true);
+      ipcRenderer.send("SIGN_IN", { userId });
+
+      ipcRenderer.on("TOKEN", (evt, payload) => {
+        const token = payload;
+        store.set("authorization", token);
+      });
       router.push("/list");
     } else {
       setAlertOpen(true);

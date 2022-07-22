@@ -1,16 +1,15 @@
 import jwt from "jsonwebtoken";
-import store from "store";
 
-const { SECRET_KEY } = process.env;
+const SECRET_KEY = process.env.SECRET_KEY || "key";
 
-module.exports = {
-  sign: function (userId: string) {
+export const jwtToken = {
+  access: function (userId: string) {
     const payload = {
       userId,
     };
 
     return jwt.sign(payload, SECRET_KEY, {
-      algorithm: "SHA256",
+      algorithm: "HS256",
       expiresIn: "1h",
     });
   },
@@ -31,9 +30,14 @@ module.exports = {
   },
   refresh: function () {
     return jwt.sign({}, SECRET_KEY, {
-      algorithm: "SHA256",
-      expiresIn: "1h",
+      algorithm: "HS256",
+      expiresIn: "24h",
     });
   },
-  refreshVerify: function (token, userId) {},
+  refreshVerify: function (token, storeToken) {
+    if (token === storeToken) {
+      return true;
+    }
+    return false;
+  },
 };
