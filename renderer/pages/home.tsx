@@ -13,6 +13,12 @@ import Sign from "../components/Sign";
 
 import store from "store";
 
+const USERS = [
+  { userId: "ks@naver.com", password: "asdfqwer1" },
+  { userId: "kw@naver.com", password: "asdfqwer1" },
+  { userId: "sw@naver.com", password: "asdfqwer1" },
+];
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -27,6 +33,11 @@ function Home() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+
+  useEffect(() => {
+    store.remove("user");
+    store.set("user", USERS);
+  });
 
   useEffect(() => {
     const token = store.get("authorization");
@@ -47,6 +58,8 @@ function Home() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const id = data.get("userId");
+    console.log(id);
     const userInfo = store.get("user");
     if (userInfo) {
       const userId = String(data.get("userId"));
@@ -87,7 +100,7 @@ function Home() {
             Sign Up
           </Button>
         </div>
-        <Sign handleSubmit={handleSubmit} signText="Sign In" />
+        <Sign handleSubmit={handleSubmit} signText="Sign In" isSignUp={false} />
         <Modal open={isModalOpen} handleClose={handleModalClose} />
       </div>
     </React.Fragment>

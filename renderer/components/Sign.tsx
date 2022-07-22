@@ -18,15 +18,18 @@ import { relative } from "path";
 interface Props {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   signText: string;
+  isSignUp: boolean;
 }
 
-const Sign = ({ handleSubmit, signText }: Props) => {
+const Sign = ({ handleSubmit, signText, isSignUp }: Props) => {
   const [userIdFlag, setUserIdFlag] = useState(false);
   const [passwordFlag, setPasswordFlag] = useState(false);
+  const [passCheck, setPassCheck] = useState(isSignUp ? false : true);
   const [isButtonAbled, setIsButtonAbled] = useState(false);
+  const [pass, setPass] = useState("");
 
   useEffect(() => {
-    userIdFlag && passwordFlag
+    userIdFlag && passwordFlag && passCheck
       ? setIsButtonAbled(true)
       : setIsButtonAbled(false);
   }, [userIdFlag, passwordFlag]);
@@ -46,6 +49,14 @@ const Sign = ({ handleSubmit, signText }: Props) => {
     const password = event.currentTarget.value;
     const passwordReg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     passwordReg.test(password) ? setPasswordFlag(true) : setPasswordFlag(false);
+    setPass(password);
+  };
+
+  const handlePasswordCheck = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (event.currentTarget.value === pass) setPassCheck(true);
+    else setPassCheck(false);
   };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -82,7 +93,13 @@ const Sign = ({ handleSubmit, signText }: Props) => {
               autoFocus
               onChange={handleIdChange}
             />
-            <div style={{ position: "absolute", top: "19%", right: "2%" }}>
+            <div
+              style={{
+                position: "absolute",
+                top: `${isSignUp ? 13 : 18}%`,
+                right: "2%",
+              }}
+            >
               <Image
                 style={{
                   filter: `brightness(0) invert(${userIdFlag ? 0 : 0.7})`,
@@ -107,8 +124,26 @@ const Sign = ({ handleSubmit, signText }: Props) => {
             <Typography>
               {passwordFlag
                 ? "good"
-                : "비밀번호는 8자리 이상 영문 + 숫자 입니다"}
+                : "비밀번호는 8자리 이상 영문 + 숫자 입니다."}
             </Typography>
+            {isSignUp && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="passCheck"
+                label="PassCheck"
+                type="password"
+                id="passCheck"
+                autoComplete="current-passCheck"
+                onChange={handlePasswordCheck}
+              />
+            )}
+            {pass && isSignUp && (
+              <Typography>
+                {passCheck ? "good" : "비밀번호가 일치하지 않습니다."}
+              </Typography>
+            )}
             <Button disabled={!isButtonAbled} type="submit">
               {signText}
             </Button>

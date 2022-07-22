@@ -29,7 +29,7 @@ const Modal = ({ open, handleClose }: Props) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
-        <Sign handleSubmit={handleSubmit} signText="Sign Up" />
+        <Sign handleSubmit={handleSubmit} signText="Sign Up" isSignUp={true} />
       </Dialog>
     </div>
   );
