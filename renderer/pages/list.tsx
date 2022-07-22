@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
-import { Paper, MenuList, MenuItem, Box, Button } from "@material-ui/core";
+import {
+  Paper,
+  MenuList,
+  MenuItem,
+  Box,
+  Button,
+  Container,
+} from "@material-ui/core";
 
 import store from "store";
 
@@ -19,11 +26,22 @@ const useStyles = makeStyles((theme: Theme) =>
 function List() {
   const classes = useStyles({});
   const router = useRouter();
-  const userInfo = Object.keys(store.get("user"));
+  const userInfo = store.get("user");
+  const [userId, setUserId] = useState("");
 
   const logout = () => {
+    store.remove("authorization");
     router.push("/home");
   };
+
+  useEffect(() => {
+    const token = store.get("authorization").accessToken;
+    const base64Payload = token.split(".")[1];
+    const payload = Buffer.from(base64Payload, "base64");
+    const id = JSON.parse(payload.toString()).userId.userId;
+    setUserId(id);
+    console.log(id);
+  }, []);
 
   return (
     <React.Fragment>
@@ -38,15 +56,25 @@ function List() {
             </Button>
           </Box>
         </Box>
-        <Box sx={{ width: "40%" }}>
-          <Paper>
-            <MenuList>
-              {userInfo.map((item, index) => {
-                return <MenuItem key={item + index}>{item}</MenuItem>;
-              })}
-            </MenuList>
-          </Paper>
-        </Box>
+        <Container maxWidth="sm">
+          <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>
+            <Box sx={{ width: "40%", padding: "10px" }}>
+              <Paper>
+                <MenuList>
+                  {userInfo
+                    .filter((item) => item.userId !== userId)
+                    .map((item, index) => {
+                      return (
+                        <MenuItem key={item.userId + index}>
+                          {item.userId}
+                        </MenuItem>
+                      );
+                    })}
+                </MenuList>
+              </Paper>
+            </Box>
+          </Box>
+        </Container>
       </div>
     </React.Fragment>
   );
