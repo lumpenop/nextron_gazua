@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
-import {
-  Paper,
-  MenuList,
-  MenuItem,
-  Box,
-  Button,
-  Container,
-} from "@material-ui/core";
+import { Box, Button, Container, Dialog } from "@material-ui/core";
 
 import store from "store";
 
 import { useRouter } from "next/router";
+
+import Chat from "../components/Chat";
+import UserList from "../components/UserList";
+
+import io from "socket.io-client";
+
+const socket = io("http://localhost:3000");
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,6 +28,13 @@ function List() {
   const router = useRouter();
   const userInfo = store.get("user");
   const [userId, setUserId] = useState("");
+  const [isClick, setIsClick] = useState(false);
+  const [clickedId, setClickedId] = useState("");
+
+  socket.on("hello", function (data) {
+    console.log("hi");
+    console.log("Message from Server: " + data);
+  });
 
   const logout = () => {
     store.remove("authorization");
@@ -40,8 +47,16 @@ function List() {
     const payload = Buffer.from(base64Payload, "base64");
     const id = JSON.parse(payload.toString()).userId.userId;
     setUserId(id);
-    console.log(id);
   }, []);
+
+  const onClick = (item) => {
+    setIsClick(true);
+    setClickedId(item);
+  };
+
+  const onClose = () => {
+    setIsClick(false);
+  };
 
   return (
     <React.Fragment>
@@ -57,22 +72,11 @@ function List() {
           </Box>
         </Box>
         <Container maxWidth="sm">
-          <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>
-            <Box sx={{ width: "40%", padding: "10px" }}>
-              <Paper>
-                <MenuList>
-                  {userInfo
-                    .filter((item) => item.userId !== userId)
-                    .map((item, index) => {
-                      return (
-                        <MenuItem key={item.userId + index}>
-                          {item.userId}
-                        </MenuItem>
-                      );
-                    })}
-                </MenuList>
-              </Paper>
-            </Box>
+          <Box sx={{ bgcolor: "#cfe8fc", minHeight: "70vh" }}>
+            <UserList userInfo={userInfo} onClick={onClick} userId={userId} />
+            <Dialog open={isClick} onClose={onClose}>
+              <Chat userId={clickedId} />
+            </Dialog>
           </Box>
         </Container>
       </div>

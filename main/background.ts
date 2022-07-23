@@ -6,6 +6,20 @@ import { jwtToken } from "./jwt";
 
 const isProd: boolean = process.env.NODE_ENV === "production";
 
+import { Server } from "socket.io";
+
+const io = new Server(3000, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", function (socket) {
+  // 접속한 클라이언트의 정보가 수신되면
+  console.log("hi");
+  socket.emit("hello", "hello");
+});
+
 if (isProd) {
   serve({ directory: "app" });
 } else {
