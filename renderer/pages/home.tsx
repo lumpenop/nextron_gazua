@@ -58,8 +58,6 @@ function Home() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const id = data.get("userId");
-    console.log(id);
     const userInfo = store.get("user");
     if (userInfo) {
       const userId = String(data.get("userId"));

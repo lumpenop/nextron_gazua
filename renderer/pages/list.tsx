@@ -10,10 +10,6 @@ import { useRouter } from "next/router";
 import Chat from "../components/Chat";
 import UserList from "../components/UserList";
 
-import io from "socket.io-client";
-
-const socket = io("http://localhost:3000");
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -30,11 +26,6 @@ function List() {
   const [userId, setUserId] = useState("");
   const [isClick, setIsClick] = useState(false);
   const [clickedId, setClickedId] = useState("");
-
-  socket.on("hello", function (data) {
-    console.log("hi");
-    console.log("Message from Server: " + data);
-  });
 
   const logout = () => {
     store.remove("authorization");
@@ -75,7 +66,7 @@ function List() {
           <Box sx={{ bgcolor: "#cfe8fc", minHeight: "70vh" }}>
             <UserList userInfo={userInfo} onClick={onClick} userId={userId} />
             <Dialog open={isClick} onClose={onClose}>
-              <Chat userId={clickedId} />
+              <Chat userId={userId} clickedId={clickedId} />
             </Dialog>
           </Box>
         </Container>

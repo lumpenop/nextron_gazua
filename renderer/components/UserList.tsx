@@ -16,6 +16,7 @@ const UserList = ({ userInfo, onClick, userId }: Props) => {
     <Box sx={{ width: "40%", padding: "10px", minWidth: "180px" }}>
       <Paper>
         <MenuList>
+          <MenuItem onClick={() => onClick("전체")}>그룹 채팅</MenuItem>
           {userInfo
             .filter((item) => item.userId !== userId)
             .map((item, index) => {
