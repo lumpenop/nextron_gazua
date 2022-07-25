@@ -6,6 +6,7 @@
 jwt 토큰을 이용하여 로그인, 자동 로그인
 socket.io 를 이용하여 채팅 구현
 
+- 편의를 위해 비밀번호는 패턴 유효성 검사만 구현
 
 ## ⚙ 기술 스택
   nextron (next.js + electron) , typescript, socket.io
