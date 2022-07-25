@@ -1,38 +1,17 @@
-<p align="center"><img src="https://i.imgur.com/flcMvDC.png"></p>
+# nextron 채팅 앱
 
-## Usage
+## 📜 프로젝트 개요
+로그인, 채팅 기능이 있는 데스크톱 앱
 
-### Create an App
+jwt 토큰을 이용하여 로그인, 자동 로그인
+socket.io 를 이용하여 채팅 구현
+
+
+## ⚙ 기술 스택
+  nextron (next.js + electron) , typescript, socket.io
+```
+그 외 추가 라이브러리
+store.js
 
 ```
-# with npx
-$ npx create-nextron-app my-app --example with-typescript-material-ui
 
-# with yarn
-$ yarn create nextron-app my-app --example with-typescript-material-ui
-
-# with pnpx
-$ pnpx create-nextron-app my-app --example with-typescript-material-ui
-```
-
-### Install Dependencies
-
-```
-$ cd my-app
-
-# using yarn or npm
-$ yarn (or `npm install`)
-
-# using pnpm
-$ pnpm install --shamefully-hoist
-```
-
-### Use it
-
-```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
-
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
-```
