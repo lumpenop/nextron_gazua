@@ -16,6 +16,10 @@ const io = new Server(3000, {
 
 io.on("connection", function (socket) {
   // 접속한 클라이언트의 정보가 수신되면
+  socket.on("joinRoom", function (data) {
+    const roomId = data.userId;
+    if (io.sockets.adapter.rooms.get(roomId)) socket.join(data.userId);
+  });
   socket.on("message", function (data) {
     socket.emit("message", data);
   });
