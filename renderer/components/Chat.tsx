@@ -81,9 +81,12 @@ const Chat = ({ userId, clickedId }: Props) => {
 
   useEffect(() => {
     socket.on("message", function (data) {
+      console.log(data);
       storageSetTexts(data);
     });
     setTexts();
+
+    socket.emit("joinRoom", clickedId);
   }, []);
 
   useLayoutEffect(() => {
@@ -99,7 +102,7 @@ const Chat = ({ userId, clickedId }: Props) => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    socket.emit("message", { userId, inputText });
+    socket.emit("message", { userId, clickedId, inputText });
 
     setInputText("");
   };
